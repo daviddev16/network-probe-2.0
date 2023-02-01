@@ -1,6 +1,7 @@
 package com.networkprobe.core.factory;
 
 import com.networkprobe.core.*;
+import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.enums.AddressFamily;
 import com.networkprobe.core.enums.RuleType;
 import com.networkprobe.core.model.Route;

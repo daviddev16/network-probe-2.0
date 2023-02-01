@@ -1,4 +1,4 @@
-package com.networkprobe.core;
+package com.networkprobe.core.config;
 
 import com.networkprobe.core.model.Route;
 import com.networkprobe.core.model.Rule;

@@ -2,7 +2,7 @@ package com.networkprobe.main;
 
 import com.networkprobe.core.Environment;
 import com.networkprobe.core.factory.NetworkFactory;
-import com.networkprobe.core.NetworkConfig;
+import com.networkprobe.core.config.NetworkConfig;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.io.File;
