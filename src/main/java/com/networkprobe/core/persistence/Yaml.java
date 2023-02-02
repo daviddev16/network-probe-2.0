@@ -31,5 +31,9 @@ public class Yaml {
         MAPPER.writer(PRINTER).writeValue(file, validate(object, "object"));
     }
 
+    public static <E> E load(File file, Class<E> clazz) throws IOException {
+        return (E) MAPPER.readValue(file, clazz);
+    }
+
 
 }

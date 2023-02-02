@@ -1,0 +1,44 @@
+---
+
+# Definindo rotas para servidor IMMOBILE E ALTERDATA_PACK;
+routes:
+- routeName: "rota{ALTERDATA_IMMOBILE}"
+  blockedAddresses: []
+  addressFamily: "REMOTE"
+  databaseName: "ALTERDATA_IMMOBILE"
+  remoteAddress: "10.16.200.254"
+
+- routeName: "rota{ALTERDATA_PACK}"
+  blockedAddresses: []
+  addressFamily: "REMOTE"
+  databaseName: "ALTERDATA_PACK"
+  remoteAddress: "172.16.243.254"
+
+# Definindo partição de rede para banco de dados distintos;
+# 192.168.1.1 -> 192.168.1.69 é particionado para ALTERDATA_PACK;
+# 192.168.1.70 -> 192.168.1.200 é particionado para ALTERDATA_IMMOBILE;
+
+rules:
+- ruleOrder: -20
+  ruleName: "bloquear{outras_rotas}"
+  routeName: "rota{ALTERDATA_IMMOBILE}"
+  command: "any"
+  addressBlockIds:
+  - "192.168.201-192.168.1.254"
+  ruleType: "IGNORE"
+
+- ruleOrder: 0
+  ruleName: "regra{rota{ALTERDATA_IMMOBILE}}"
+  routeName: "rota{ALTERDATA_IMMOBILE}"
+  command: "request:alterdata_immobile"
+  addressBlockIds:
+  - "192.168.1.70-192.168.1.254"
+  ruleType: "ACCEPT"
+
+- ruleOrder: 1
+  ruleName: "regra{rota{ALTERDATA_PACK}}"
+  routeName: "rota{ALTERDATA_PACK}"
+  command: "request:alterdata_pack"
+  addressBlockIds:
+  - "192.168.1.1-192.168.1.69"
+  ruleType: "ACCEPT"

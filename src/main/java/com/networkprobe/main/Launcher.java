@@ -3,6 +3,7 @@ package com.networkprobe.main;
 import com.networkprobe.core.Environment;
 import com.networkprobe.core.factory.NetworkFactory;
 import com.networkprobe.core.config.NetworkConfig;
+import com.networkprobe.core.persistence.Yaml;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.io.File;
@@ -31,6 +32,9 @@ public class Launcher {
 
         put(CONFIG_FILE_KEY, networkConfigFile);
         System.out.println("Ok.");
+
+        NetworkConfig config = Yaml.load(networkConfigFile, NetworkConfig.class);
+        System.out.println(config.getRoutes().size());
 
     }
 

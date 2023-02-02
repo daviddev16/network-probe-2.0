@@ -12,24 +12,27 @@ import static com.networkprobe.core.util.Utilities.RANDOM;
 public class Rule {
 
     public static final int DEFAULT_ORDER = 10;
+    public static final String ANY_COMMAND = "any";
 
     private int ruleOrder;
     private String ruleName;
     private String routeName;
+    private String command;
     private List<String> addressBlockIds;
     private RuleType ruleType;
 
-    public Rule(int ruleOrder, String ruleName, String routeName,
+    public Rule(int ruleOrder, String ruleName, String routeName, String command,
                 List<String> addressBlockIds, RuleType ruleType) {
         this.ruleOrder = ruleOrder;
         this.ruleName = ruleName;
         this.routeName = routeName;
+        this.command = command;
         this.addressBlockIds = addressBlockIds;
         this.ruleType = ruleType;
     }
 
     public Rule(int ruleOrder, String ruleName) {
-        this(ruleOrder, ruleName, Route.UNDEFINED_ROUTE_VALUE,
+        this(ruleOrder, ruleName, Route.UNDEFINED_ROUTE_VALUE, ANY_COMMAND,
                 new ArrayList<>(), RuleType.IGNORE);
     }
 
@@ -43,6 +46,14 @@ public class Rule {
 
     protected void setRuleOrder(int ruleOrder) {
         this.ruleOrder = ruleOrder;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
     }
 
     public String getRuleName() {

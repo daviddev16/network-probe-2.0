@@ -1,0 +1,27 @@
+---
+routes:
+- routeName: "immobile-route-662f4a8b-76f6-4fea-afbf-3e01d5123e55"
+  blockedAddresses: []
+  addressFamily: "LOCAL"
+  databaseName: "ALTERDATA_IMMOBILE"
+  remoteAddress: "-"
+- routeName: "pack0-route-9c230d94-8403-4367-8bd8-f3a51ed89ae2"
+  blockedAddresses: []
+  addressFamily: "REMOTE"
+  databaseName: "ALTERDATA_PACK"
+  remoteAddress: "172.16.100.254"
+rules:
+- ruleOrder: 10
+  ruleName: "rule-6f6108a2-ae42-4403-83c7-ecbd50306bf8"
+  routeName: "immobile-route-662f4a8b-76f6-4fea-afbf-3e01d5123e55"
+  command: "any"
+  addressBlockIds:
+  - "192.168.1.0-192.168.1.254"
+  ruleType: "ACCEPT"
+- ruleOrder: 10
+  ruleName: "rule-62531a9d-4e87-4724-b748-018ff754d144"
+  routeName: "immobile-route-662f4a8b-76f6-4fea-afbf-3e01d5123e55"
+  command: "any"
+  addressBlockIds:
+  - "192.168.1.0-192.168.1.100"
+  ruleType: "ACCEPT"
