@@ -35,7 +35,7 @@ public class NetworkFactory {
 
     public void createDefaultNetworkConfigFile(String fileName) throws IOException {
 
-        File currentDirectory = new File(Environment.getString(Environment.CURRENT_DIRECTORY_KEY));
+        File currentDirectory = new File(Environment.getString(Environment.CURRENT_DIRECTORY));
         File configFile = new File(currentDirectory, validate(fileName, "fileName"));
         NetworkConfig networkConfig = createDefaultNetworkConfig();
 

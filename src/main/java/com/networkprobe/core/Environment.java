@@ -12,8 +12,9 @@ import static com.networkprobe.core.util.Exceptions.instanceAlreadyExistsExcepti
 @LikellyStaticMethods
 public final class Environment {
 
-    public static final String CURRENT_DIRECTORY_KEY = "current_dir";
-    public static final String CONFIG_FILE_KEY = "config_file";
+    public static final String CURRENT_DIRECTORY = "currentDirectory";
+    public static final String NETWORK_CONFIG_FILE = "networkConfigFile";
+    public static final String NETWORK_CONFIG = "networkConfigObject";
 
     private static Environment instance;
 
