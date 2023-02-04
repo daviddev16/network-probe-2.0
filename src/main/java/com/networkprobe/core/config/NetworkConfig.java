@@ -12,6 +12,8 @@ public class NetworkConfig implements Serializable {
 
 	public static final String DEFAULT_CONFIG_FILENAME = "network-config.yaml";
 
+	private int requestThreshold;
+
 	private List<Route> routes;
 	private List<Rule> rules;
 
@@ -40,4 +42,11 @@ public class NetworkConfig implements Serializable {
 		this.rules = rules;
 	}
 
+	public int getRequestThreshold() {
+		return requestThreshold;
+	}
+
+	public void setRequestThreshold(int requestThreshold) {
+		this.requestThreshold = requestThreshold;
+	}
 }

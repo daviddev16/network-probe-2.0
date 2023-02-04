@@ -4,19 +4,6 @@ import java.util.regex.Pattern;
 
 public class Networking {
 
-	/*public static void main(String[] args) {
-
-		
-		String range1 = "192.168.1.0";
-		String range2 = "192.168.1.255";
-		String ip = "192.168.1.22";
-		
-		//AddressBlockId addressBlockId = new AddressBlockId(range1, range2);
-		
-		//System.out.println(addressBlockId.valid(ip));
-	
-	}*/
-
 	public static int[] toIntegers(String address) {
 
 		String[] octets = address.replaceAll("\\s+", "")
@@ -50,15 +37,6 @@ public class Networking {
 				(addressValue & 0xFF);
 	}
 
-	/*public static long toLong2(String address) {
-		long addressValue = -1;
-		int[] octets = toIntegers(address);
-		addressValue = (octets[0] * (int) Math.pow(256, 3)) + 
-				       (octets[1] * (int) Math.pow(256, 2)) + 
-				       (octets[2] * 256)+ (octets[3]);
-		return addressValue;
-	}*/
-	
 	public static long toLong(String address) {
 		int[] octets = toIntegers(address);
 		int addressValue = ((octets[0] << 24));
@@ -67,6 +45,4 @@ public class Networking {
 		addressValue |= ((octets[3]));
 		return addressValue;
 	}
-
-
 }

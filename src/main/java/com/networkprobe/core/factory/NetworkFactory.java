@@ -19,18 +19,16 @@ import static com.networkprobe.core.util.Exceptions.*;
 import static com.networkprobe.core.util.Names.*;
 import static com.networkprobe.core.util.Validator.validate;
 
-
 public class NetworkFactory {
 
     private static NetworkFactory instance;
 
-    public NetworkFactory() throws InstanceAlreadyExistsException {
+    private NetworkFactory() throws InstanceAlreadyExistsException {
 
         if (instance != null)
             throw instanceAlreadyExistsException(NetworkFactory.class);
 
         instance = this;
-
     }
 
     public void createDefaultNetworkConfigFile(String fileName) throws IOException {
@@ -87,12 +85,14 @@ public class NetworkFactory {
                         .get()
         );
 
+        config.setRequestThreshold(20);
         config.setRoutes(routes);
         config.setRules(rules);
+
         return config;
     }
 
-    public static void init() throws InstanceAlreadyExistsException {
+    public static void setup() throws InstanceAlreadyExistsException {
         new NetworkFactory();
     }
 

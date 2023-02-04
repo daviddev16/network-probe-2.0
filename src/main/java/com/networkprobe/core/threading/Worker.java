@@ -17,21 +17,6 @@ public abstract class Worker implements Runnable {
         this.updatable = updatable;
     }
 
-    public synchronized void start() {
-        worker = new Thread(this, name);
-        worker.setDaemon(daemon);
-        worker.start();
-    }
-
-    public synchronized void stop() {
-        runningState.set(false);
-        worker.interrupt();
-    }
-
-    public boolean isStopped() {
-        return !runningState.get();
-    }
-
     @Override
     public void run() {
         runningState.set(true);
@@ -45,6 +30,21 @@ public abstract class Worker implements Runnable {
             runningState.set(false);
 
         onStop();
+    }
+
+    public synchronized void start() {
+        worker = new Thread(this, name);
+        worker.setDaemon(daemon);
+        worker.start();
+    }
+
+    public synchronized void stop() {
+        runningState.set(false);
+        worker.interrupt();
+    }
+
+    public boolean isStopped() {
+        return !runningState.get();
     }
 
     public abstract void onBegin();
