@@ -9,6 +9,8 @@ import com.networkprobe.core.model.RouterBuilder;
 import com.networkprobe.core.model.Rule;
 import com.networkprobe.core.model.RuleBuilder;
 import com.networkprobe.core.persistence.Yaml;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.io.File;
@@ -23,6 +25,8 @@ public class NetworkFactory {
 
     private static NetworkFactory instance;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(NetworkFactory.class);
+
     private NetworkFactory() throws InstanceAlreadyExistsException {
 
         if (instance != null)
@@ -31,10 +35,10 @@ public class NetworkFactory {
         instance = this;
     }
 
-    public void createDefaultNetworkConfigFile(String fileName) throws IOException {
+    public void createDefaultNetworkConfigFile(File configFile) throws IOException {
 
-        File currentDirectory = new File(Environment.getString(Environment.CURRENT_DIRECTORY));
-        File configFile = new File(currentDirectory, validate(fileName, "fileName"));
+        validate(configFile, "configFile");
+
         NetworkConfig networkConfig = createDefaultNetworkConfig();
 
         if (configFile.exists())
@@ -42,8 +46,7 @@ public class NetworkFactory {
 
         configFile.createNewFile();
         Yaml.save(configFile, networkConfig);
-        System.out.println("Arquivo salvo.");
-
+        LOGGER.info("Configuração básica de NetworkConfig foi salva em \"{}\".", configFile.getPath());
     }
 
     public NetworkConfig createDefaultNetworkConfig() {

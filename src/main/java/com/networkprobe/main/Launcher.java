@@ -29,7 +29,7 @@ public class Launcher {
             File networkConfigFile = new File(currentDirectory, NetworkConfig.DEFAULT_CONFIG_FILENAME);
 
             if (!networkConfigFile.exists())
-                NetworkFactory.getFactory().createDefaultNetworkConfigFile(NetworkConfig.DEFAULT_CONFIG_FILENAME);
+                NetworkFactory.getFactory().createDefaultNetworkConfigFile(networkConfigFile);
 
             NetworkConfig config = Yaml.load(networkConfigFile, NetworkConfig.class);
 
@@ -43,6 +43,7 @@ public class Launcher {
         } catch (Exception e) {
             LOGGER.error("Houve um erro ao iniciar ou processar os dados.");
             LOGGER.error(e.getMessage());
+            e.printStackTrace();
             System.exit(0);
         }
 
