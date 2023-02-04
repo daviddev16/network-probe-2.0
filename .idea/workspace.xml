@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7e8670d0-02be-422a-a594-1629f632bacc" name="Changes" comment="NetworkConfig saving file problem fixed" />
+    <list default="true" id="7e8670d0-02be-422a-a594-1629f632bacc" name="Changes" comment="NetworkConfig saving file problem fixed">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/ClientSocketWorker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/NetworkServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/client/NetworkClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/client/NetworkClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/BroadcastListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/BroadcastListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/main/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/main/Launcher.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -143,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675549713054</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="NetworkConfig saving file problem fixed">
+      <created>1675550019339</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1675550019339</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

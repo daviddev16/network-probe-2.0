@@ -11,10 +11,10 @@ import java.nio.charset.Charset;
 
 public final class BroadcastListener extends Worker {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastListener.class);
+
     public static final int MESSAGE_MAX_LENGTH = 8;
     public static final int LISTEN_PORT = 14476;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastListener.class);
 
     private DatagramSocket socket;
 

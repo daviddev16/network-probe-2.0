@@ -5,6 +5,7 @@ import com.networkprobe.core.factory.NetworkFactory;
 import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.persistence.Yaml;
 import com.networkprobe.core.server.BroadcastListener;
+import com.networkprobe.core.server.NetworkServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,9 @@ public class Launcher {
 
             BroadcastListener broadcastServerListener = new BroadcastListener();
             broadcastServerListener.start();
+
+            NetworkServer networkServer = new NetworkServer();
+            networkServer.start();
 
         } catch (Exception e) {
             LOGGER.error("Houve um erro ao iniciar ou processar os dados.");
