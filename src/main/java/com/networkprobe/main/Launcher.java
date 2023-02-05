@@ -6,6 +6,7 @@ import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.persistence.Yaml;
 import com.networkprobe.core.server.BroadcastListener;
 import com.networkprobe.core.server.NetworkServer;
+import com.networkprobe.core.server.audit.Monitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ public class Launcher {
 
             Environment.setup();
             NetworkFactory.setup();
+            Monitor.setup();
 
             String currentDirectory = System.getProperty("user.dir");
             File networkConfigFile = new File(currentDirectory, NetworkConfig.DEFAULT_CONFIG_FILENAME);

@@ -1,7 +1,6 @@
 package com.networkprobe.core.server;
 
 import com.networkprobe.core.Environment;
-import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.threading.Worker;
 import com.networkprobe.core.util.Exceptions;
 import org.slf4j.Logger;
