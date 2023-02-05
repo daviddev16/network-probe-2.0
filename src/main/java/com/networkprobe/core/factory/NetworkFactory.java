@@ -9,6 +9,8 @@ import com.networkprobe.core.model.RouterBuilder;
 import com.networkprobe.core.model.Rule;
 import com.networkprobe.core.model.RuleBuilder;
 import com.networkprobe.core.persistence.Yaml;
+import com.networkprobe.core.server.BroadcastListener;
+import com.networkprobe.core.server.NetworkServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +90,9 @@ public class NetworkFactory {
                         .get()
         );
 
-        config.setRequestThreshold(20);
+        config.getServer().setRequestThreshold(20);
+        config.getServer().setTcpPort(NetworkServer.DEFAULT_LISTEN_PORT);
+        config.getServer().setUdpPort(BroadcastListener.DEFAULT_LISTEN_PORT);
         config.setRoutes(routes);
         config.setRules(rules);
 

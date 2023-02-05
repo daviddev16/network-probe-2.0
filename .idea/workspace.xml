@@ -4,12 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7e8670d0-02be-422a-a594-1629f632bacc" name="Changes" comment="NetworkConfig saving file problem fixed">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/ClientSocketWorker.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/NetworkServer.java" afterDir="false" />
+    <list default="true" id="7e8670d0-02be-422a-a594-1629f632bacc" name="Changes" comment="Building NetworkServer.java">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/client/NetworkClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/client/NetworkClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network-config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/network-config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/Environment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/config/NetworkConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/config/NetworkConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/factory/NetworkFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/factory/NetworkFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/BroadcastListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/BroadcastListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/ClientSocketWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/NetworkServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/NetworkServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/policies/DoSPolicy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/server/policies/DoSPolicy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/util/Exceptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/core/util/Exceptions.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/networkprobe/main/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/networkprobe/main/Launcher.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +35,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="e6a6bc4f057840cb5192f9d7d4c48e3c5fbf8641" />
+        <entry key="$PROJECT_DIR$" value="dev" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -157,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675550019339</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Building NetworkServer.java">
+      <created>1675553142030</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1675553142030</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -182,7 +194,8 @@
     <MESSAGE value="Initial message" />
     <MESSAGE value="Monitor/DoSPolicy added" />
     <MESSAGE value="NetworkConfig saving file problem fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="NetworkConfig saving file problem fixed" />
+    <MESSAGE value="Building NetworkServer.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Building NetworkServer.java" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

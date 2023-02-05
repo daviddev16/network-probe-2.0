@@ -1,6 +1,9 @@
 package com.networkprobe.core.server;
 
+import com.networkprobe.core.Environment;
+import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.threading.Worker;
+import com.networkprobe.core.util.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +13,7 @@ public class NetworkServer extends Worker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NetworkServer.class);
 
-    public static final int LISTEN_PORT = 14477;
+    public static final int DEFAULT_LISTEN_PORT = 14477;
 
     private ServerSocket serverSocket;
 
@@ -21,10 +24,11 @@ public class NetworkServer extends Worker {
     @Override
     public void onBegin() {
         try {
-            serverSocket = new ServerSocket(LISTEN_PORT);
-            LOGGER.info("Listening on port {} for connections.", LISTEN_PORT);
+            int listenPort = Environment.getConfig().getServer().getTcpPort();
+            serverSocket = new ServerSocket(listenPort);
+            LOGGER.info("Escutando na porta {} por conexões", listenPort);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Exceptions.traceAndQuit(e, 0);
         }
     }
 
@@ -33,11 +37,11 @@ public class NetworkServer extends Worker {
         try {
             synchronized (serverSocket) {
                 Socket clientSocket = serverSocket.accept();
-                ClientSocketWorker clientSocketWorker = new ClientSocketWorker(clientSocket);
-                clientSocketWorker.start();
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                clientHandler.start();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Exceptions.traceAndQuit(e, 0);
         }
     }
 

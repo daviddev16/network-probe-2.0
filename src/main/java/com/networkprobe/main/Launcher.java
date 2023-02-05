@@ -21,6 +21,7 @@ public class Launcher {
 
         try {
 
+            Thread.currentThread().setName("network-probe-main");
             LOGGER.info("Iniciando NetworkProbe");
 
             Environment.setup();

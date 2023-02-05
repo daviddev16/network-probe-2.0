@@ -9,22 +9,22 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ClientSocketWorker extends Worker {
+public class ClientHandler extends Worker {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientSocketWorker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class);
 
     private static final AtomicInteger ID = new AtomicInteger(-1);
 
     private final Socket clientSocket;
 
-    public ClientSocketWorker(Socket clientSocket) {
+    public ClientHandler(Socket clientSocket) {
         super("client-worker" + ID.incrementAndGet(), true, false);
         this.clientSocket = clientSocket;
     }
 
     @Override
     public void onBegin() {
-        LOGGER.info("O servidor começou uma conexão com \"{}\".", clientSocket.getInetAddress().getHostAddress());
+        LOGGER.info("\"{}\" começou uma conexão com o servidor.", clientSocket.getInetAddress().getHostAddress());
     }
 
     @Override
@@ -34,11 +34,12 @@ public class ClientSocketWorker extends Worker {
             Scanner in = new Scanner(clientSocket.getInputStream());
             while (in.hasNextLine()) {
                 String input = in.nextLine();
-                if (input.equalsIgnoreCase("close")) {
-                    break;
+                if (input.trim().equalsIgnoreCase("close")) {
+                   break;
                 }
-                out.println("Server get: " + input.trim());
+                out.println("Echo-reply: " + input.trim());
             }
+            stop();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -46,6 +47,13 @@ public class ClientSocketWorker extends Worker {
 
     @Override
     public void onStop() {
+        try {
+            if (clientSocket != null)
+                clientSocket.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        ID.decrementAndGet();
         LOGGER.info("Conexão encerrada.");
     }
 

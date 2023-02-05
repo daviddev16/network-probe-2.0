@@ -1,8 +1,11 @@
 package com.networkprobe.core.server;
 
+import com.networkprobe.core.Environment;
+import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.server.audit.Monitor;
 import com.networkprobe.core.server.policies.DoSPolicy;
 import com.networkprobe.core.threading.Worker;
+import com.networkprobe.core.util.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +17,7 @@ public final class BroadcastListener extends Worker {
     private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastListener.class);
 
     public static final int MESSAGE_MAX_LENGTH = 8;
-    public static final int LISTEN_PORT = 14476;
+    public static final int DEFAULT_LISTEN_PORT = 14476;
 
     private DatagramSocket socket;
 
@@ -25,11 +28,13 @@ public final class BroadcastListener extends Worker {
     @Override
     public void onBegin() {
         try {
-            SocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName("0.0.0.0"), LISTEN_PORT);
+            InetAddress inetAddress = InetAddress.getByName("0.0.0.0");
+            int listenPort = Environment.getConfig().getServer().getUdpPort();
+            SocketAddress socketAddress = new InetSocketAddress(inetAddress, listenPort);
             socket = new DatagramSocket(socketAddress);
-            LOGGER.info("Listening on port {} for broadcasts.", LISTEN_PORT);
+            LOGGER.info("Escutando na porta {} por broadcasts", listenPort);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Exceptions.traceAndQuit(e, 0);
         }
     }
 
@@ -40,7 +45,7 @@ public final class BroadcastListener extends Worker {
             socket.receive(packet);
             process(packet);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Exceptions.traceAndQuit(e, 0);
         }
     }
 
