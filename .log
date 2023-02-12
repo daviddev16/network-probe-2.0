@@ -1,5 +1,0 @@
-NullPointerException:nullcom.networkprobe.core.model.RuleBuilder.addressBlock(RuleBuilder.java:33)
-com.networkprobe.core.model.RuleBuilder.range(RuleBuilder.java:38)
-com.networkprobe.core.factory.NetworkFactory.createDefaultNetworkConfig(NetworkFactory.java:79)
-com.networkprobe.core.factory.NetworkFactory.createDefaultNetworkConfigFile(NetworkFactory.java:42)
-com.networkprobe.main.Launcher.main(Launcher.java:44)
