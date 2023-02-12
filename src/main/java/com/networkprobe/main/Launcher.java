@@ -11,6 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.*;
 
 import static com.networkprobe.core.Environment.*;
 
@@ -18,7 +23,10 @@ public class Launcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+            throws IOException, URISyntaxException {
+
+        String currentDirectory = System.getProperty("user.dir");
 
         try {
 
@@ -29,7 +37,6 @@ public class Launcher {
             NetworkFactory.setup();
             Monitor.setup();
 
-            String currentDirectory = System.getProperty("user.dir");
             File networkConfigFile = new File(currentDirectory, NetworkConfig.DEFAULT_CONFIG_FILENAME);
 
             if (!networkConfigFile.exists())
@@ -48,12 +55,32 @@ public class Launcher {
             networkServer.start();
 
         } catch (Exception e) {
-            LOGGER.error("Houve um erro ao iniciar ou processar os dados.");
-            LOGGER.error(e.getMessage());
-            e.printStackTrace();
-            System.exit(0);
-        }
 
+            LOGGER.error("Houve um erro ao iniciar ou processar os dados.");
+            LOGGER.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+
+
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(e.getClass().getSimpleName() + ":")
+                    .append(e.getMessage() + "\n");
+
+            for (StackTraceElement element : e.getStackTrace())
+                buffer.append(element.toString())
+                        .append('\n');
+
+            byte[] exceptionTrace = buffer.toString().getBytes(Charset.forName("UTF-8"));
+
+            File logFile = new File(currentDirectory + "/.log_trace");
+            if (!logFile.exists())
+                logFile.createNewFile();
+
+            URI logUri = logFile.toURI();
+
+            Files.write(Paths.get(logUri), exceptionTrace, StandardOpenOption.WRITE);
+
+            System.exit(0);
+
+        }
 
     }
 

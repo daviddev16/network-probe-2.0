@@ -1,9 +1,7 @@
 package com.networkprobe.core.factory;
 
-import com.networkprobe.core.*;
 import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.enums.AddressFamily;
-import com.networkprobe.core.enums.RuleType;
 import com.networkprobe.core.model.Route;
 import com.networkprobe.core.model.RouterBuilder;
 import com.networkprobe.core.model.Rule;
@@ -79,14 +77,12 @@ public class NetworkFactory {
                         //.command("cmd:immobile") -> para quando receber a comunicação TCP
                         .route(immobileRouteName)
                         .range("192.168.1.0", "192.168.1.254")
-                        .type(RuleType.ACCEPT)
                         .get(),
                 RuleBuilder.create()
                         .order(Rule.DEFAULT_ORDER)
                         //.command("cmd:pack0") -> para quando receber a comunicação TCP
                         .route(immobileRouteName)
                         .range("192.168.1.0", "192.168.1.100")
-                        .type(RuleType.ACCEPT)
                         .get()
         );
 
