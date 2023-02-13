@@ -1,7 +1,6 @@
 package com.networkprobe.core.server.policies;
 
 import com.networkprobe.core.Environment;
-import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.server.audit.Monitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ public class DoSPolicy {
 
         String address = packet.getAddress().getHostAddress();
 
-        int requestThreshold = ((NetworkConfig)Environment.access(Environment.NETWORK_CONFIG))
+        int requestThreshold = Environment.getConfig().getServer()
                 .getRequestThreshold();
 
         int requestTimes = Monitor.getMonitor()

@@ -1,6 +1,7 @@
 package com.networkprobe.core;
 
 import com.networkprobe.core.annotation.LikellyStaticMethods;
+import com.networkprobe.core.config.NetworkConfig;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.Collections;
@@ -12,8 +13,6 @@ import static com.networkprobe.core.util.Exceptions.*;
 @LikellyStaticMethods
 public final class Environment {
 
-    public static final String CURRENT_DIRECTORY    = "currentDirectory";
-    public static final String NETWORK_CONFIG_FILE  = "networkConfigFile";
     public static final String NETWORK_CONFIG       = "networkConfigObject";
 
     private static Environment instance;
@@ -33,12 +32,16 @@ public final class Environment {
         instance.envMap.put(key, value);
     }
 
-    public static <E> E access(String key) {
+    public static <E> E get(String key) {
         return (E) instance.envMap.getOrDefault(key, null);
     }
 
     public static String getString(String key) {
-        return (String) instance.envMap.getOrDefault(key, null);
+        return (String) instance.envMap.getOrDefault(key, "");
+    }
+
+    public static NetworkConfig getConfig() {
+        return (NetworkConfig) get(NETWORK_CONFIG);
     }
 
     public static boolean exists(String key) {

@@ -1,7 +1,5 @@
 package com.networkprobe.core.model;
 
-import com.networkprobe.core.enums.RuleType;
-
 import static com.networkprobe.core.util.Validator.validate;
 
 public class RuleBuilder {
@@ -31,8 +29,8 @@ public class RuleBuilder {
         return this;
     }
 
-    public RuleBuilder addressBlock(String addressBlockId) {
-        rule.getAddressBlockIds().add( validate(addressBlockId, "addressBlockId") );
+    public RuleBuilder addressBlock(String addressBlocks) {
+        rule.getAddressBlocks().add( validate(addressBlocks, "addressBlocks") );
         return this;
     }
 
@@ -40,10 +38,6 @@ public class RuleBuilder {
         return addressBlock(startAddress + "-" + endAddress);
     }
 
-    public RuleBuilder type(RuleType ruleType) {
-        rule.setRuleType( validate(ruleType, "ruleType") );
-        return this;
-    }
 
     public Rule get() {
         return rule;

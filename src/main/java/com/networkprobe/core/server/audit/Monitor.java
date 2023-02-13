@@ -24,7 +24,7 @@ public class Monitor extends Worker {
 
     private Map<String, RequestMetadata> metadata;
 
-    protected Monitor() throws InstanceAlreadyExistsException {
+    private Monitor() throws InstanceAlreadyExistsException {
         super("monitor", true, false);
 
         if (instance != null)
@@ -78,6 +78,12 @@ public class Monitor extends Worker {
     public static Monitor getMonitor() {
         return instance;
     }
+
+    public static void setup() throws InstanceAlreadyExistsException {
+        Monitor monitor = new Monitor();
+        monitor.start();
+    }
+
 
     public static final class RequestMetadata {
 

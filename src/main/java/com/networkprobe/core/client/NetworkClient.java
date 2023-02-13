@@ -1,3 +1,3 @@
 package com.networkprobe.core.client;
 
-public class NetworkClient {}
+public class NetworkClient { }

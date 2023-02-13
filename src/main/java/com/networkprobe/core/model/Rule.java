@@ -1,6 +1,5 @@
 package com.networkprobe.core.model;
 
-import com.networkprobe.core.enums.RuleType;
 import com.networkprobe.core.util.Names;
 
 import java.util.ArrayList;
@@ -18,22 +17,20 @@ public class Rule {
     private String ruleName;
     private String routeName;
     private String command;
-    private List<String> addressBlockIds;
-    private RuleType ruleType;
+    private List<String> addressBlocks;
 
     public Rule(int ruleOrder, String ruleName, String routeName, String command,
-                List<String> addressBlockIds, RuleType ruleType) {
+                List<String> addressBlocks) {
         this.ruleOrder = ruleOrder;
         this.ruleName = ruleName;
         this.routeName = routeName;
         this.command = command;
-        this.addressBlockIds = addressBlockIds;
-        this.ruleType = ruleType;
+        this.addressBlocks = addressBlocks;
     }
 
     public Rule(int ruleOrder, String ruleName) {
         this(ruleOrder, ruleName, Route.UNDEFINED_ROUTE_VALUE, ANY_COMMAND,
-                new ArrayList<>(), RuleType.IGNORE);
+                new ArrayList<>());
     }
 
     public Rule() {
@@ -72,20 +69,12 @@ public class Rule {
         this.routeName = routeName;
     }
 
-    public List<String> getAddressBlockIds() {
-        return addressBlockIds;
+    public List<String> getAddressBlocks() {
+        return addressBlocks;
     }
 
-    protected void setAddressBlockIds(List<String> addressBlockIds) {
-        this.addressBlockIds = addressBlockIds;
-    }
-
-    public RuleType getRuleType() {
-        return ruleType;
-    }
-
-    protected void setRuleType(RuleType ruleType) {
-        this.ruleType = ruleType;
+    protected void setAddressBlocks(List<String> addressBlocks) {
+        this.addressBlocks = addressBlocks;
     }
 
     public static final List<Rule> createRules(Rule rule0, Rule... rule1) {
