@@ -34,6 +34,11 @@ public class RuleBuilder {
         return this;
     }
 
+    public RuleBuilder command(String command) {
+        rule.setCommand( validate(command, "command") );
+        return this;
+    }
+
     public RuleBuilder range(String startAddress, String endAddress) {
         return addressBlock(startAddress + "-" + endAddress);
     }
