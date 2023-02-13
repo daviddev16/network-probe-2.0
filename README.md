@@ -1,2 +1,2 @@
 # network-probre-2.0
-working on backend
+Network service for managing connection to database routes (Client & Server side)
