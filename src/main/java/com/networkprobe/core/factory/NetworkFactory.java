@@ -53,20 +53,10 @@ public class NetworkFactory {
 
         NetworkConfig config = new NetworkConfig();
 
-        final String immobileRouteName = createName("immobile-route");
-        final String packRouteName = createName("pack0-route");
-
         List<Route> routes = Route.createRoutes(
-                /* route for immobile database connection */
                 RouterBuilder.create()
-                        .name(immobileRouteName)
+                        .name("alterdata_pack_route")
                         .family(AddressFamily.LOCAL, Route.LOCAL_FAMILY_VALUE)
-                        .database("ALTERDATA_IMMOBILE")
-                        .get(),
-                /* route for pack database connection */
-                RouterBuilder.create()
-                        .name(packRouteName)
-                        .family(AddressFamily.REMOTE, "172.16.100.254")
                         .database("ALTERDATA_PACK")
                         .get()
         );
@@ -74,14 +64,9 @@ public class NetworkFactory {
         List<Rule> rules = Rule.createRules(
                 RuleBuilder.create()
                         .order(Rule.DEFAULT_ORDER)
-                        //.command("cmd:immobile") -> para quando receber a comunicação TCP
-                        .route(immobileRouteName)
-                        .range("192.168.1.0", "192.168.1.254")
-                        .get(),
-                RuleBuilder.create()
-                        .order(Rule.DEFAULT_ORDER)
+                        .name("alterdata_pack_rule")
                         //.command("cmd:pack0") -> para quando receber a comunicação TCP
-                        .route(immobileRouteName)
+                        .route("alterdata_pack_route")
                         .range("192.168.1.0", "192.168.1.100")
                         .get()
         );

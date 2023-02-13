@@ -53,7 +53,6 @@ public class ClientHandler extends Worker {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        ID.decrementAndGet();
         LOGGER.info("Conexão encerrada.");
     }
 

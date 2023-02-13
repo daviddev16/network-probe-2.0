@@ -25,7 +25,7 @@ public class Rule {
         this.ruleName = ruleName;
         this.routeName = routeName;
         this.command = command;
-        this.addressBlocks = null;
+        this.addressBlocks = addressBlocks;
     }
 
     public Rule(int ruleOrder, String ruleName) {
