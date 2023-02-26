@@ -1,6 +1,7 @@
 package com.networkprobe.core.server;
 
-import com.networkprobe.core.Environment;
+import com.networkprobe.core.config.NetworkConfig;
+import com.networkprobe.core.init.Environment;
 import com.networkprobe.core.threading.Worker;
 import com.networkprobe.core.util.Exceptions;
 import org.slf4j.Logger;
@@ -23,9 +24,14 @@ public class NetworkServer extends Worker {
     @Override
     public void onBegin() {
         try {
-            int listenPort = Environment.getConfig().getServer().getTcpPort();
+
+            NetworkConfig networkConfig = Environment.get(Environment.NETWORK_CONFIG);
+
+            int listenPort = networkConfig.getServer().getTcpPort();
             serverSocket = new ServerSocket(listenPort);
+
             LOGGER.info("Escutando na porta {} por conexões", listenPort);
+
         } catch (Exception e) {
             Exceptions.traceAndQuit(e, 0);
         }

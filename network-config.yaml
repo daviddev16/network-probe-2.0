@@ -1,0 +1,18 @@
+---
+server:
+  tcpPort: 14477
+  udpPort: 14476
+  requestThreshold: 20
+routes:
+- routeName: "alterdata_pack_route"
+  blockedAddresses: []
+  addressFamily: "LOCAL"
+  databaseName: "ALTERDATA_PACK"
+  remoteAddress: "-"
+rules:
+- ruleOrder: 10
+  ruleName: "alterdata_pack_rule"
+  routeName: "alterdata_pack_route"
+  command: "any"
+  addressBlocks:
+  - "192.168.1.0-192.168.1.100"
