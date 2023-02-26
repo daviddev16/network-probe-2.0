@@ -12,14 +12,14 @@ public class CmdOptions {
                 .longOpt("load-as")
                 .hasArg(true)
                 .required(true)
-                .desc("Tipo de inicialização do serviço.")
+                .desc("Start as a client or server")
                 .build();
 
         Option verboseOption = Option.builder("v")
                 .longOpt("verbose")
                 .hasArg(false)
                 .required(false)
-                .desc("Informar logs da aplicação")
+                .desc("verbose mode")
                 .build();
 
         options.addOption(loadAsOption);
