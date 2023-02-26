@@ -4,12 +4,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Worker implements Runnable {
 
-    private AtomicBoolean runningState = new AtomicBoolean(false);
+    private Thread worker;
 
-    private volatile Thread worker;
-    private boolean updatable;
-    private boolean daemon;
-    private String name;
+    private final AtomicBoolean state = new AtomicBoolean(false);
+
+    private final boolean updatable;
+    private final boolean daemon;
+    private final String name;
 
     public Worker(String name, boolean updatable, boolean daemon) {
         this.name = name;
@@ -19,15 +20,15 @@ public abstract class Worker implements Runnable {
 
     @Override
     public void run() {
-        runningState.set(true);
+        state.set(true);
         onBegin();
 
         do {
             onUpdate();
-        } while (runningState.get() && updatable);
+        } while (state.get() && updatable);
 
-        if (!runningState.get() && updatable)
-            runningState.set(false);
+        if (!state.get() && updatable)
+            state.set(false);
 
         onStop();
     }
@@ -39,12 +40,14 @@ public abstract class Worker implements Runnable {
     }
 
     public synchronized void stop() {
-        runningState.set(false);
-        worker.interrupt();
+        state.set(false);
+
+        if (!state.get())
+            worker.interrupt();
     }
 
-    public boolean isStopped() {
-        return !runningState.get();
+    public boolean currentState() {
+        return state.get();
     }
 
     public abstract void onBegin();

@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
 import static com.networkprobe.core.Environment.*;
@@ -22,9 +22,8 @@ import static com.networkprobe.core.Environment.*;
 public class Launcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-
     public static void main(String[] args)
-            throws IOException, URISyntaxException {
+            throws IOException {
 
         String currentDirectory = System.getProperty("user.dir");
 
@@ -60,17 +59,20 @@ public class Launcher {
             LOGGER.error(e.getClass().getSimpleName() + ": " + e.getMessage());
 
 
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(e.getClass().getSimpleName() + ":")
-                    .append(e.getMessage() + "\n");
+            StringBuilder buffer = new StringBuilder()
+                    .append(e.getClass().getSimpleName())
+                    .append(':')
+                    .append(e.getMessage())
+                    .append('\n');
 
             for (StackTraceElement element : e.getStackTrace())
                 buffer.append(element.toString())
                         .append('\n');
 
-            byte[] exceptionTrace = buffer.toString().getBytes(Charset.forName("UTF-8"));
+            byte[] exceptionTrace = buffer.toString().getBytes(StandardCharsets.UTF_8);
 
             File logFile = new File(currentDirectory + "/.log_trace");
+
             if (!logFile.exists())
                 logFile.createNewFile();
 
