@@ -1,8 +1,10 @@
 package com.networkprobe.core.util;
 
-import java.util.UUID;
+import java.util.Random;
 
 public class Names {
+
+    private static final Random RAND = new Random();
 
     public static String createRouteName() {
         return createName("route");
@@ -13,6 +15,6 @@ public class Names {
     }
 
     public static String createName(String prefix) {
-        return prefix + "-" + UUID.randomUUID();
+        return String.format("%s-%04d", prefix, RAND.nextInt(65536));
     }
 }

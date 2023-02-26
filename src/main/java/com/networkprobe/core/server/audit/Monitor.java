@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.management.InstanceAlreadyExistsException;
-import java.net.DatagramPacket;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class Monitor extends Worker {
 
     public static final long CACHE_TTL = TimeUnit.SECONDS.toMillis(1L);
 
-    private Map<String, RequestMetadata> metadata;
+    private final Map<String, RequestMetadata> metadata;
 
     private Monitor() throws InstanceAlreadyExistsException {
         super("monitor", true, false);
@@ -30,8 +29,8 @@ public class Monitor extends Worker {
         if (instance != null)
             throw instanceAlreadyExistsException(Monitor.class);
 
-        instance = this;
         metadata = Collections.synchronizedMap(new HashMap<>());
+        instance = this;
     }
 
     @Override
@@ -55,9 +54,7 @@ public class Monitor extends Worker {
         clearMetadata();
     }
 
-    public void registerOrUpdate(DatagramPacket packet) {
-
-        String address = packet.getAddress().getHostAddress();
+    public void registerOrUpdate(String address) {
 
         if (!metadata.containsKey(address)) {
             RequestMetadata clientMetadata = new RequestMetadata();

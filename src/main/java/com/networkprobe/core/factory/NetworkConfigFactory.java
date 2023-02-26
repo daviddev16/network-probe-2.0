@@ -18,19 +18,18 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.networkprobe.core.util.Exceptions.*;
-import static com.networkprobe.core.util.Names.*;
 import static com.networkprobe.core.util.Validator.validate;
 
-public class NetworkFactory {
+public class NetworkConfigFactory {
 
-    private static NetworkFactory instance;
+    private static NetworkConfigFactory instance;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NetworkFactory.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NetworkConfigFactory.class);
 
-    private NetworkFactory() throws InstanceAlreadyExistsException {
+    private NetworkConfigFactory() throws InstanceAlreadyExistsException {
 
         if (instance != null)
-            throw instanceAlreadyExistsException(NetworkFactory.class);
+            throw instanceAlreadyExistsException(NetworkConfigFactory.class);
 
         instance = this;
     }
@@ -41,11 +40,14 @@ public class NetworkFactory {
 
         NetworkConfig networkConfig = createDefaultNetworkConfig();
 
-        if (configFile.exists())
-            return; /*retornar um log de debug dizendo que já existe este arquivo */
+        if (configFile.exists()) {
+            LOGGER.info("Não foi necessário gerar um arquivo de configuração padrão.");
+            return;
+        }
 
         configFile.createNewFile();
         Yaml.save(configFile, networkConfig);
+
         LOGGER.info("Configuração básica de NetworkConfig foi salva em \"{}\".", configFile.getPath());
     }
 
@@ -81,10 +83,10 @@ public class NetworkFactory {
     }
 
     public static void setup() throws InstanceAlreadyExistsException {
-        new NetworkFactory();
+        new NetworkConfigFactory();
     }
 
-    public static NetworkFactory getFactory() {
+    public static NetworkConfigFactory getFactory() {
         return instance;
     }
 

@@ -46,14 +46,10 @@ public abstract class Worker implements Runnable {
             worker.interrupt();
     }
 
-    public boolean currentState() {
-        return state.get();
-    }
+    protected abstract void onBegin();
 
-    public abstract void onBegin();
+    protected abstract void onUpdate();
 
-    public abstract void onUpdate();
-
-    public abstract void onStop();
+    protected abstract void onStop();
 
 }

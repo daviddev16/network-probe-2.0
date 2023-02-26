@@ -1,31 +1,20 @@
 package com.networkprobe.core.server.policies;
 
-import com.networkprobe.core.Environment;
+import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.server.audit.Monitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.DatagramPacket;
 
 public class DoSPolicy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DoSPolicy.class);
 
-    public static boolean accept(DatagramPacket packet) {
-
-        String address = packet.getAddress().getHostAddress();
-
-        int requestThreshold = Environment.getConfig().getServer()
-                .getRequestThreshold();
-
-        int requestTimes = Monitor.getMonitor()
-                .getMetadata(address).getRequestTimes();
-
-        if (requestTimes > requestThreshold) {
+    public static boolean accept(final NetworkConfig config, String address) {
+        if (Monitor.getMonitor().getMetadata(address)
+                .getRequestTimes() > config.getServer().getRequestThreshold()) {
             LOGGER.warn("{} ultrapassou o limite de requisições por segundo.", address);
             return false;
         }
-
         return true;
     }
 }
