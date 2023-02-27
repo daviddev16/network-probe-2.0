@@ -15,6 +15,13 @@ public class CmdOptions {
                 .desc("Start as a client or server")
                 .build();
 
+        Option bindAddressOption = Option.builder("bind")
+                .longOpt("bind")
+                .hasArg(true)
+                .required(true)
+                .desc("Bind socket to a defined interface")
+                .build();
+
         Option verboseOption = Option.builder("v")
                 .longOpt("verbose")
                 .hasArg(false)
@@ -23,6 +30,7 @@ public class CmdOptions {
                 .build();
 
         options.addOption(loadAsOption);
+        options.addOption(bindAddressOption);
         options.addOption(verboseOption);
 
         return options;

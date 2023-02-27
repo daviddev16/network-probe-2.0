@@ -53,33 +53,13 @@ public class NetworkConfig implements Serializable {
 
 	public static final class ServerConfig {
 
-		private int tcpPort;
-		private int udpPort;
 		private int requestThreshold;
 
-		public ServerConfig(int tcpPort, int udpPort, int requestThreshold) {
-			this.tcpPort = tcpPort;
-			this.udpPort = udpPort;
+		public ServerConfig(int requestThreshold) {
 			this.requestThreshold = requestThreshold;
 		}
 
 		public ServerConfig() { }
-
-		public int getTcpPort() {
-			return tcpPort;
-		}
-
-		public void setTcpPort(int tcpPort) {
-			this.tcpPort = tcpPort;
-		}
-
-		public int getUdpPort() {
-			return udpPort;
-		}
-
-		public void setUdpPort(int udpPort) {
-			this.udpPort = udpPort;
-		}
 
 		public int getRequestThreshold() {
 			return requestThreshold;

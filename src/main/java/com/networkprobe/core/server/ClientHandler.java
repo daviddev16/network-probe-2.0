@@ -24,7 +24,7 @@ public class ClientHandler extends Worker {
 
     @Override
     public void onBegin() {
-        LOGGER.info("\"{}\" começou uma conexão com o servidor.", clientSocket.getInetAddress().getHostAddress());
+        LOGGER.info("\"{}\" started a TCP connection with the server.", clientSocket.getInetAddress().getHostAddress());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ClientHandler extends Worker {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        LOGGER.info("Conexão encerrada.");
+        LOGGER.info("Socket closed.");
     }
 
     public Socket getClientSocket() {

@@ -11,8 +11,7 @@ import java.net.*;
 
 public class NetworkServer extends Worker {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NetworkServer.class);
-
+    private static final Logger LOGGER          = LoggerFactory.getLogger(NetworkServer.class);
     public static final int DEFAULT_LISTEN_PORT = 14477;
 
     private ServerSocket serverSocket;
@@ -24,16 +23,13 @@ public class NetworkServer extends Worker {
     @Override
     public void onBegin() {
         try {
-
             NetworkConfig networkConfig = Environment.get(Environment.NETWORK_CONFIG);
-
-            int listenPort = networkConfig.getServer().getTcpPort();
-            serverSocket = new ServerSocket(listenPort);
-
-            LOGGER.info("Escutando na porta {} por conexões", listenPort);
-
+            String bindAddress = Environment.get(Environment.BIND_ADDRESS);
+            InetAddress inetAddress = InetAddress.getByName(bindAddress);
+            serverSocket = new ServerSocket(DEFAULT_LISTEN_PORT, 1024, inetAddress);
+            LOGGER.info("Listen on port {} for TCP connections.", DEFAULT_LISTEN_PORT);
         } catch (Exception e) {
-            Exceptions.traceAndQuit(e, 0);
+            Exceptions.unexpected(e, 1);
         }
     }
 
@@ -46,7 +42,7 @@ public class NetworkServer extends Worker {
                 clientHandler.start();
             }
         } catch (Exception e) {
-            Exceptions.traceAndQuit(e, 0);
+            Exceptions.unexpected(e, 1);
         }
     }
 

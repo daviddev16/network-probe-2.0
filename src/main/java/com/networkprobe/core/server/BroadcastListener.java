@@ -15,33 +15,32 @@ import java.nio.charset.StandardCharsets;
 
 public final class BroadcastListener extends Worker {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastListener.class);
+    private static final Logger LOGGER          = LoggerFactory.getLogger(BroadcastListener.class);
 
-    public static final int MESSAGE_MAX_LENGTH = 8;
+    public static final int MESSAGE_MAX_LENGTH  = 8;
     public static final int DEFAULT_LISTEN_PORT = 14476;
 
     private DatagramSocket socket;
-    private NetworkConfig networkConfig;
+    private NetworkConfig networkConfig = Environment.get(Environment.NETWORK_CONFIG);
 
     public BroadcastListener() {
-        super("bc-listener", true, false);
+        super("broadcast-listener", true, false);
     }
 
     @Override
     public void onBegin() {
         try {
 
-            networkConfig = Environment.get(Environment.NETWORK_CONFIG);
-            InetAddress inetAddress = InetAddress.getByName("0.0.0.0");
+            String bindAddress = Environment.get(Environment.BIND_ADDRESS);
+            InetAddress inetAddress = InetAddress.getByName(bindAddress);
 
-            int listenPort = networkConfig.getServer().getUdpPort();
-            SocketAddress socketAddress = new InetSocketAddress(inetAddress, listenPort);
+            SocketAddress socketAddress = new InetSocketAddress(inetAddress, DEFAULT_LISTEN_PORT);
             socket = new DatagramSocket(socketAddress);
 
-            LOGGER.info("Escutando na porta {} por broadcasts", listenPort);
+            LOGGER.info("Listening on port {} for broadcast signals.", DEFAULT_LISTEN_PORT);
 
         } catch (Exception e) {
-            Exceptions.traceAndQuit(e, 0);
+            Exceptions.unexpected(e, 1);
         }
     }
 
@@ -52,7 +51,7 @@ public final class BroadcastListener extends Worker {
             socket.receive(packet);
             process(packet);
         } catch (Exception e) {
-            Exceptions.traceAndQuit(e, 0);
+            Exceptions.unexpected(e, 1);
         }
     }
 

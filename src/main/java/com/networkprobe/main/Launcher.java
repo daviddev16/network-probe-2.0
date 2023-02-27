@@ -1,6 +1,7 @@
 package com.networkprobe.main;
 
 import com.networkprobe.core.ServiceType;
+import com.networkprobe.core.client.NetworkClient;
 import com.networkprobe.core.init.Environment;
 import com.networkprobe.core.factory.NetworkConfigFactory;
 import com.networkprobe.core.config.NetworkConfig;
@@ -9,6 +10,7 @@ import com.networkprobe.core.persistence.Yaml;
 import com.networkprobe.core.server.BroadcastListener;
 import com.networkprobe.core.server.NetworkServer;
 import com.networkprobe.core.server.audit.Monitor;
+import com.networkprobe.core.util.Validator;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Level;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import javax.management.InstanceAlreadyExistsException;
 import java.io.File;
 import java.io.IOException;
+import java.util.InvalidPropertiesFormatException;
 
 import static com.networkprobe.core.init.Environment.*;
 
@@ -27,6 +30,7 @@ public class Launcher {
     public static void main(String[] args) {
 
         try {
+
             Thread.currentThread().setName("network-probe-main");
 
             Options options = CmdOptions.createDefaultOptions();
@@ -43,12 +47,12 @@ public class Launcher {
             if (!commandLine.hasOption("verbose"))
                 disableLogging();
 
-            LOGGER.info("Iniciando NetworkProbe");
+            LOGGER.info("Starting NetworkProbe");
             Environment.setup();
 
             switch (ServiceType.parse(serviceTypeValue)) {
                 case CLIENT:
-                    launchClient();
+                    launchClient(commandLine);
                     break;
                 case SERVER:
                     launchServer();
@@ -87,8 +91,17 @@ public class Launcher {
         networkServer.start();
     }
 
-    public static void launchClient() {
-        System.out.println("Ok.");
+    public static void launchClient(final CommandLine commandLine)
+            throws InvalidPropertiesFormatException {
+
+        String bindAddressValue = Validator.validateAddress(
+                commandLine.getOptionValue("bind")
+        );
+
+        Environment.set(BIND_ADDRESS, bindAddressValue, true);
+
+        NetworkClient client = new NetworkClient();
+        client.start();
     }
 
     public static CommandLine processCommandLine(Options options, String[] args) {

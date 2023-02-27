@@ -14,6 +14,7 @@ import static com.networkprobe.core.util.Exceptions.*;
 public class Environment {
 
     public static final String NETWORK_CONFIG       = "networkConfigObject";
+    public static final String BIND_ADDRESS         = "bindAddress";
 
     public static final String DEFAULT_VALUE        = "default";
 

@@ -41,14 +41,13 @@ public class NetworkConfigFactory {
         NetworkConfig networkConfig = createDefaultNetworkConfig();
 
         if (configFile.exists()) {
-            LOGGER.info("Não foi necessário gerar um arquivo de configuração padrão.");
             return;
         }
 
         configFile.createNewFile();
         Yaml.save(configFile, networkConfig);
 
-        LOGGER.info("Configuração básica de NetworkConfig foi salva em \"{}\".", configFile.getPath());
+        LOGGER.info("A basic configuration for NetworkConfig was saved. \n\"{}\".", configFile.getPath());
     }
 
     public NetworkConfig createDefaultNetworkConfig() {
@@ -74,8 +73,6 @@ public class NetworkConfigFactory {
         );
 
         config.getServer().setRequestThreshold(20);
-        config.getServer().setTcpPort(NetworkServer.DEFAULT_LISTEN_PORT);
-        config.getServer().setUdpPort(BroadcastListener.DEFAULT_LISTEN_PORT);
         config.setRoutes(routes);
         config.setRules(rules);
 

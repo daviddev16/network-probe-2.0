@@ -1,7 +1,5 @@
 ---
 server:
-  tcpPort: 14477
-  udpPort: 14476
   requestThreshold: 20
 routes:
 - routeName: "alterdata_pack_route"
