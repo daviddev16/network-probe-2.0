@@ -12,7 +12,7 @@ public class DoSPolicy {
     public static boolean accept(final NetworkConfig config, String address) {
         if (Monitor.getMonitor().getMetadata(address)
                 .getRequestTimes() > config.getServer().getRequestThreshold()) {
-            LOGGER.warn("{} ultrapassou o limite de requisições por segundo.", address);
+            LOGGER.warn("{} exceed the limit of request per second.", address);
             return false;
         }
         return true;

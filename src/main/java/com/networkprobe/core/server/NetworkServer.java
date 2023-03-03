@@ -1,13 +1,14 @@
 package com.networkprobe.core.server;
 
-import com.networkprobe.core.config.NetworkConfig;
-import com.networkprobe.core.init.Environment;
+import com.networkprobe.core.Environment;
 import com.networkprobe.core.threading.Worker;
 import com.networkprobe.core.util.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class NetworkServer extends Worker {
 
@@ -23,10 +24,8 @@ public class NetworkServer extends Worker {
     @Override
     public void onBegin() {
         try {
-            NetworkConfig networkConfig = Environment.get(Environment.NETWORK_CONFIG);
-            String bindAddress = Environment.get(Environment.BIND_ADDRESS);
-            InetAddress inetAddress = InetAddress.getByName(bindAddress);
-            serverSocket = new ServerSocket(DEFAULT_LISTEN_PORT, 1024, inetAddress);
+            serverSocket = new ServerSocket(DEFAULT_LISTEN_PORT, 1024, InetAddress
+                    .getByName(Environment.get(Environment.BIND_ADDRESS)));
             LOGGER.info("Listen on port {} for TCP connections.", DEFAULT_LISTEN_PORT);
         } catch (Exception e) {
             Exceptions.unexpected(e, 1);

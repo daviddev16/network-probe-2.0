@@ -15,22 +15,18 @@ public class NetworkClient extends Worker {
 
     @Override
     public void onBegin() {
-
         try {
-
             NetworkProbeFinder finder = new NetworkProbeFinder();
             finder.start();
-
             synchronized (NetworkProbeFinder.LOCK) {
                 LOGGER.info("Waiting for the finder response...");
                 NetworkProbeFinder.LOCK.wait();
-                System.out.println("unlocked on client");
+                System.out.println("Response GET: " + finder.getResponse());
             }
 
         } catch (Exception e) {
             Exceptions.unexpected(e, 1);
         }
-
     }
 
     @Override

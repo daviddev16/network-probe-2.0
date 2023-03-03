@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Networking {
 
+	public static final int MIN_BUFFER_SIZE = 8;
 	public static final String ALL_INTERFACES_BROADCAST_ADDRESS = "255.255.255.255";
 
 	public static NetworkInterface getNetworkInterfaceByAddress(String addressString)
@@ -47,5 +48,16 @@ public class Networking {
 		byte[] buffer = message.getBytes(StandardCharsets.UTF_8);
 		return new DatagramPacket(buffer, 0, buffer.length, inetAddress, port);
 	}
+
+	public static DatagramPacket createABufferedPacket(int length) {
+		byte[] buffer = new byte[ (length < MIN_BUFFER_SIZE) ? MIN_BUFFER_SIZE : length ];
+		return new DatagramPacket(buffer, 0, buffer.length);
+	}
+
+	public static String getBufferedData(DatagramPacket packet) {
+		Validator.validate(packet, "packet");
+		return new String(packet.getData(), StandardCharsets.UTF_8).trim();
+	}
+
 
 }

@@ -1,4 +1,4 @@
-package com.networkprobe.core.init;
+package com.networkprobe.core;
 
 import com.networkprobe.core.annotation.LikellyStaticMethods;
 

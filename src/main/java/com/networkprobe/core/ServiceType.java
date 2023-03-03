@@ -14,7 +14,7 @@ public enum ServiceType {
 
     public static ServiceType parse(String value) {
         Objects.requireNonNull(value, "ServiceType string value is null.");
-        return valueOf(value);
+        return valueOf(value.trim().toUpperCase());
     }
 
 }

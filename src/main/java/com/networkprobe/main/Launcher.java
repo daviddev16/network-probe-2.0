@@ -2,10 +2,10 @@ package com.networkprobe.main;
 
 import com.networkprobe.core.ServiceType;
 import com.networkprobe.core.client.NetworkClient;
-import com.networkprobe.core.init.Environment;
+import com.networkprobe.core.Environment;
 import com.networkprobe.core.factory.NetworkConfigFactory;
 import com.networkprobe.core.config.NetworkConfig;
-import com.networkprobe.core.init.CmdOptions;
+import com.networkprobe.core.CmdOptions;
 import com.networkprobe.core.persistence.Yaml;
 import com.networkprobe.core.server.BroadcastListener;
 import com.networkprobe.core.server.NetworkServer;
@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 
-import static com.networkprobe.core.init.Environment.*;
+import static com.networkprobe.core.Environment.*;
 
 public class Launcher {
 
@@ -47,8 +47,13 @@ public class Launcher {
             if (!commandLine.hasOption("verbose"))
                 disableLogging();
 
+            String bindAddressValue = Validator.validateAddress(
+                    commandLine.getOptionValue("bind")
+            );
+
             LOGGER.info("Starting NetworkProbe");
             Environment.setup();
+            Environment.set(BIND_ADDRESS, bindAddressValue, true);
 
             switch (ServiceType.parse(serviceTypeValue)) {
                 case CLIENT:
@@ -93,12 +98,6 @@ public class Launcher {
 
     public static void launchClient(final CommandLine commandLine)
             throws InvalidPropertiesFormatException {
-
-        String bindAddressValue = Validator.validateAddress(
-                commandLine.getOptionValue("bind")
-        );
-
-        Environment.set(BIND_ADDRESS, bindAddressValue, true);
 
         NetworkClient client = new NetworkClient();
         client.start();

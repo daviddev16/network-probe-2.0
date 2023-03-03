@@ -1,6 +1,7 @@
 package com.networkprobe.core.client;
 
-import com.networkprobe.core.init.Environment;
+import com.networkprobe.core.Messages;
+import com.networkprobe.core.Environment;
 import com.networkprobe.core.server.BroadcastListener;
 import com.networkprobe.core.threading.Worker;
 import com.networkprobe.core.util.Exceptions;
@@ -11,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.*;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class NetworkProbeFinder extends Worker {
@@ -19,13 +19,7 @@ public class NetworkProbeFinder extends Worker {
     public static final Logger LOGGER               = LoggerFactory.getLogger(NetworkProbeFinder.class);
     public static final Object LOCK                 = new Object();
 
-    public static final String HELLO_MESSAGE        = "hello";
-    public static final String FAILED_MESSAGE       = "failed";
-
-    public static final long ATTEMPT_TIMEOUT        = TimeUnit.SECONDS.toMillis(2);
-    public static final int MAX_ATTEMPTS            = 3;
-
-    private AtomicReference<String> reponse = new AtomicReference<>();
+    private AtomicReference<String> response = new AtomicReference<>(Messages.NONE);
 
     private volatile DatagramSocket datagramSocket;
     private volatile String broadcastAddress;
@@ -71,36 +65,67 @@ public class NetworkProbeFinder extends Worker {
 
         try {
 
-            Thread.sleep(ATTEMPT_TIMEOUT);
-
-            LOGGER.info("ATTEMPT: Sending hello packet to the network [{}/{}]", attempts + 1, MAX_ATTEMPTS);
-
-            InetAddress broadcastInetAddress = InetAddress.getByName(broadcastAddress);
-
-            DatagramPacket helloPacket = Networking.createMessagePacket(broadcastInetAddress,
-                    BroadcastListener.DEFAULT_LISTEN_PORT, HELLO_MESSAGE);
-
-            datagramSocket.send(helloPacket);
-
             attempts++;
+            Thread.sleep(Messages.ATTEMPT_TIMEOUT);
+            LOGGER.info("ATTEMPT: Sending hello packet to the network [{}/{}]", attempts, Messages.MAX_ATTEMPTS);
 
-            if (attempts == MAX_ATTEMPTS) {
+            {
+                DatagramPacket helloPacket = Networking.createMessagePacket(InetAddress.getByName(broadcastAddress),
+                        BroadcastListener.DEFAULT_LISTEN_PORT, Messages.HELLO);
+
+                datagramSocket.send(helloPacket);
+            }
+
+            Thread socketListenerThread = createListenerThread();
+            socketListenerThread.setName("socket-receiver-thread-attempt#" + attempts);
+            socketListenerThread.start();
+
+            if (attempts == Messages.MAX_ATTEMPTS) {
                 stop();
                 synchronized (LOCK) {
                     LOCK.notify();
                 }
             }
 
+        } catch (InterruptedException e) {
+            /* ignore */
         } catch (Exception e) {
             Exceptions.unexpected(e, 1);
         }
+    }
+
+    /* it doesn't need to be a Worker in this case */
+    private Thread createListenerThread() {
+
+        Thread listenerThread = new Thread(() ->
+        {
+            DatagramPacket comingPacket = Networking.createABufferedPacket(0);
+
+            try {
+
+                datagramSocket.receive(comingPacket);
+                String message = Networking.getBufferedData(comingPacket);
+
+                if (message != null && !message.isEmpty()) {
+                    /*TODO: verificar se é uma mensagem válida. */
+                    /*TODO: Setar no "response"  */
+                }
+
+                NetworkProbeFinder.this.stop();
+
+            } catch (Exception e) {
+                Exceptions.unexpected(e, 10);
+            }
+        });
+
+        return listenerThread;
     }
 
     @Override
     protected void onStop() {}
 
     public String getResponse() {
-        return reponse.get();
+        return response.get();
     }
 
 }

@@ -1,16 +1,18 @@
 package com.networkprobe.core.server;
 
+import com.networkprobe.core.client.NetworkProbeFinder;
 import com.networkprobe.core.config.NetworkConfig;
-import com.networkprobe.core.init.Environment;
+import com.networkprobe.core.Environment;
 import com.networkprobe.core.server.audit.Monitor;
 import com.networkprobe.core.server.policies.DoSPolicy;
 import com.networkprobe.core.threading.Worker;
 import com.networkprobe.core.util.Exceptions;
+import com.networkprobe.core.util.Networking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public final class BroadcastListener extends Worker {
@@ -20,7 +22,7 @@ public final class BroadcastListener extends Worker {
     public static final int MESSAGE_MAX_LENGTH  = 8;
     public static final int DEFAULT_LISTEN_PORT = 14476;
 
-    private DatagramSocket socket;
+    private DatagramSocket datagramSocket;
     private NetworkConfig networkConfig = Environment.get(Environment.NETWORK_CONFIG);
 
     public BroadcastListener() {
@@ -35,7 +37,7 @@ public final class BroadcastListener extends Worker {
             InetAddress inetAddress = InetAddress.getByName(bindAddress);
 
             SocketAddress socketAddress = new InetSocketAddress(inetAddress, DEFAULT_LISTEN_PORT);
-            socket = new DatagramSocket(socketAddress);
+            datagramSocket = new DatagramSocket(socketAddress);
 
             LOGGER.info("Listening on port {} for broadcast signals.", DEFAULT_LISTEN_PORT);
 
@@ -48,7 +50,7 @@ public final class BroadcastListener extends Worker {
     public void onUpdate() {
         try {
             final DatagramPacket packet = createDatagramPacket();
-            socket.receive(packet);
+            datagramSocket.receive(packet);
             process(packet);
         } catch (Exception e) {
             Exceptions.unexpected(e, 1);
@@ -57,13 +59,16 @@ public final class BroadcastListener extends Worker {
 
     @Override
     public void onStop() {
-        if (socket != null)
-            socket.close();
+        try {
+            if (datagramSocket != null)
+                datagramSocket.close();
+        } catch (Exception e) { /* ignore */ }
     }
 
-    private void process(DatagramPacket packet) {
+    private void process(DatagramPacket packet) throws IOException {
 
         String address = packet.getAddress().getHostAddress();
+        Monitor.getMonitor().registerOrUpdate(address);
 
         if (!DoSPolicy.accept(networkConfig, address))
             return;
@@ -71,7 +76,10 @@ public final class BroadcastListener extends Worker {
         String data = new String(packet.getData(), StandardCharsets.UTF_8);
         System.out.println(data);
 
-        Monitor.getMonitor().registerOrUpdate(address);
+        DatagramPacket echoPacket = Networking.createMessagePacket(packet.getAddress(),
+                packet.getPort(), NetworkProbeFinder.HELLO_MESSAGE);
+
+        datagramSocket.send(echoPacket);
     }
 
     private DatagramPacket createDatagramPacket() {
