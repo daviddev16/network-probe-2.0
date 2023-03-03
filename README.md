@@ -12,7 +12,7 @@ This version is more generic and flexible, you can configure your own routes and
 
 ### 💠 How it works?
 
-Firstly, the server service needs to be installed on any machine in the network (Ex.: 192.168.1.0/24), once it is initialized, the client program on any machine in the same network will send a broadcast with 3 attempts for a server response with a `HELLO` packet, when the server service responds to the client broadcast, the client program will start an TCP connection to transmit all the information needed to load the system.  
+Firstly, the server service needs to be installed on any machine in the network (Ex.: 192.168.1.0/24), once it is initialized, the client program on any machine in the same network will send a broadcast with 3 attempts waiting for the server response with a `HELLO` packet, when the server service responds to the client broadcast, the client program will start an TCP connection to transmit all the information needed to load the system.  
 
 ![Client and server log](https://i.imgur.com/wC7yRKX_d.webp?maxwidth=1920)
 This version is not committed yet!
