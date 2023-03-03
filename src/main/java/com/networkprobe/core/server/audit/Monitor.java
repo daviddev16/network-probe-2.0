@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.networkprobe.core.util.Exceptions.*;
@@ -20,6 +21,8 @@ public class Monitor extends Worker {
     private static final Logger LOGGER = LoggerFactory.getLogger(Monitor.class);
 
     public static final long CACHE_TTL = TimeUnit.SECONDS.toMillis(1L);
+
+    public static final AtomicBoolean DEBUG = new AtomicBoolean(false);
 
     private final Map<String, RequestMetadata> metadata;
 
@@ -59,9 +62,12 @@ public class Monitor extends Worker {
         if (!metadata.containsKey(address)) {
             RequestMetadata clientMetadata = new RequestMetadata();
             metadata.put(address, clientMetadata);
+            debug("\"{}\" has been added to the motinor mapper.", address);
         }
 
         metadata.get(address).count();
+        debug("\"{}\" requested \"{}\" times in 1 minute cycle.", address, (""+metadata
+                .get(address).getRequestTimes()));
     }
 
     public void clearMetadata() {
@@ -76,11 +82,16 @@ public class Monitor extends Worker {
         return instance;
     }
 
+    private void debug(String message, String... args) {
+        if (DEBUG.get()) {
+            LOGGER.debug(message, args);
+        }
+    }
+
     public static void setup() throws InstanceAlreadyExistsException {
         Monitor monitor = new Monitor();
         monitor.start();
     }
-
 
     public static final class RequestMetadata {
 

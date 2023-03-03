@@ -31,11 +31,8 @@ public class NetworkProbeFinder extends Worker {
 
     @Override
     protected void onBegin() {
-
-        final String bindAddress = Environment.get(Environment.BIND_ADDRESS);
-
         try {
-
+            final String bindAddress = Environment.get(Environment.BIND_ADDRESS);
             NetworkInterface networkInterface = Networking.getNetworkInterfaceByAddress(bindAddress);
             Set<String> broadcastAddresses = Networking.getBroadcastAddresses(networkInterface);
             broadcastAddress = Networking.getFirstBroadcast(broadcastAddresses);
@@ -52,29 +49,22 @@ public class NetworkProbeFinder extends Worker {
 
             LOGGER.info("Socket bind to \"{}\" on port \"{}\"", bindAddress, datagramSocket.getLocalPort());
             LOGGER.info("Starting sequence to find a network-probe server on \"{}\" network", bindAddress);
-
-
         } catch (Exception e) {
             Exceptions.unexpected(e, 1);
         }
-
     }
 
     @Override
     protected void onUpdate() {
-
         try {
-
             attempts++;
             Thread.sleep(Messages.ATTEMPT_TIMEOUT);
             LOGGER.info("ATTEMPT: Sending hello packet to the network [{}/{}]", attempts, Messages.MAX_ATTEMPTS);
 
-            {
-                DatagramPacket helloPacket = Networking.createMessagePacket(InetAddress.getByName(broadcastAddress),
+            DatagramPacket helloPacket = Networking.createMessagePacket(InetAddress.getByName(broadcastAddress),
                         BroadcastListener.DEFAULT_LISTEN_PORT, Messages.HELLO);
 
-                datagramSocket.send(helloPacket);
-            }
+            datagramSocket.send(helloPacket);
 
             Thread socketListenerThread = createListenerThread();
             socketListenerThread.setName("socket-receiver-thread-attempt#" + attempts);
@@ -82,9 +72,6 @@ public class NetworkProbeFinder extends Worker {
 
             if (attempts == Messages.MAX_ATTEMPTS) {
                 stop();
-                synchronized (LOCK) {
-                    LOCK.notify();
-                }
             }
 
         } catch (InterruptedException e) {
@@ -96,37 +83,43 @@ public class NetworkProbeFinder extends Worker {
 
     /* it doesn't need to be a Worker in this case */
     private Thread createListenerThread() {
-
         Thread listenerThread = new Thread(() ->
         {
             DatagramPacket comingPacket = Networking.createABufferedPacket(0);
-
             try {
+                synchronized (datagramSocket) {
+                    datagramSocket.receive(comingPacket);
+                    String message = Networking.getBufferedData(comingPacket);
 
-                datagramSocket.receive(comingPacket);
-                String message = Networking.getBufferedData(comingPacket);
+                    if (!Messages.checkMessage(message)) {
+                        LOGGER.warn("Unknown message data.");
+                        return;
+                    }
 
-                if (message != null && !message.isEmpty()) {
-                    /*TODO: verificar se é uma mensagem válida. */
-                    /*TODO: Setar no "response"  */
+                    if (message.equals(Messages.HELLO)) {
+                        response.set(comingPacket.getAddress().getHostAddress());
+                        NetworkProbeFinder.this.stop();
+                    }
                 }
-
-                NetworkProbeFinder.this.stop();
-
             } catch (Exception e) {
                 Exceptions.unexpected(e, 10);
             }
         });
-
         return listenerThread;
     }
 
     @Override
-    protected void onStop() {}
+    protected void onStop() {
+        synchronized (LOCK) {
+            LOCK.notify();
+        }
+    }
 
     public String getResponse() {
         return response.get();
     }
+
+
 
 }
 

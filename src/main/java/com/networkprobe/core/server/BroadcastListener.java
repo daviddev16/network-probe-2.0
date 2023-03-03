@@ -1,8 +1,8 @@
 package com.networkprobe.core.server;
 
-import com.networkprobe.core.client.NetworkProbeFinder;
-import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.Environment;
+import com.networkprobe.core.Messages;
+import com.networkprobe.core.config.NetworkConfig;
 import com.networkprobe.core.server.audit.Monitor;
 import com.networkprobe.core.server.policies.DoSPolicy;
 import com.networkprobe.core.threading.Worker;
@@ -13,17 +13,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 
 public final class BroadcastListener extends Worker {
 
     private static final Logger LOGGER          = LoggerFactory.getLogger(BroadcastListener.class);
-
-    public static final int MESSAGE_MAX_LENGTH  = 8;
     public static final int DEFAULT_LISTEN_PORT = 14476;
 
-    private DatagramSocket datagramSocket;
     private NetworkConfig networkConfig = Environment.get(Environment.NETWORK_CONFIG);
+    private DatagramSocket datagramSocket;
 
     public BroadcastListener() {
         super("broadcast-listener", true, false);
@@ -32,24 +29,39 @@ public final class BroadcastListener extends Worker {
     @Override
     public void onBegin() {
         try {
-
             String bindAddress = Environment.get(Environment.BIND_ADDRESS);
             InetAddress inetAddress = InetAddress.getByName(bindAddress);
-
             SocketAddress socketAddress = new InetSocketAddress(inetAddress, DEFAULT_LISTEN_PORT);
             datagramSocket = new DatagramSocket(socketAddress);
-
             LOGGER.info("Listening on port {} for broadcast signals.", DEFAULT_LISTEN_PORT);
-
         } catch (Exception e) {
             Exceptions.unexpected(e, 1);
+        }
+    }
+
+    private void process(DatagramPacket packet) throws IOException {
+
+        String address = packet.getAddress().getHostAddress();
+        Monitor.getMonitor().registerOrUpdate(address);
+
+        if (!DoSPolicy.accept(networkConfig, address))
+            return;
+
+        String dataMessage = Networking.getBufferedData(packet);
+
+        if (!Messages.checkMessage(dataMessage)) {
+            LOGGER.warn("Unknown message data.");
+        }
+        else if (dataMessage.equals(Messages.HELLO)) {
+            datagramSocket.send(Networking.createMessagePacket(packet.getAddress(),
+                    packet.getPort(), Messages.HELLO));
         }
     }
 
     @Override
     public void onUpdate() {
         try {
-            final DatagramPacket packet = createDatagramPacket();
+            final DatagramPacket packet = Networking.createABufferedPacket(0);
             datagramSocket.receive(packet);
             process(packet);
         } catch (Exception e) {
@@ -64,28 +76,5 @@ public final class BroadcastListener extends Worker {
                 datagramSocket.close();
         } catch (Exception e) { /* ignore */ }
     }
-
-    private void process(DatagramPacket packet) throws IOException {
-
-        String address = packet.getAddress().getHostAddress();
-        Monitor.getMonitor().registerOrUpdate(address);
-
-        if (!DoSPolicy.accept(networkConfig, address))
-            return;
-
-        String data = new String(packet.getData(), StandardCharsets.UTF_8);
-        System.out.println(data);
-
-        DatagramPacket echoPacket = Networking.createMessagePacket(packet.getAddress(),
-                packet.getPort(), NetworkProbeFinder.HELLO_MESSAGE);
-
-        datagramSocket.send(echoPacket);
-    }
-
-    private DatagramPacket createDatagramPacket() {
-        byte[] buffer = new byte[MESSAGE_MAX_LENGTH];
-        return new DatagramPacket(buffer, 0, buffer.length);
-    }
-
 
 }

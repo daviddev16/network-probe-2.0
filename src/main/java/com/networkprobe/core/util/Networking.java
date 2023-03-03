@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Networking {
 
-	public static final int MIN_BUFFER_SIZE = 8;
+	public static final int MIN_BUFFER_SIZE 					= 16;
 	public static final String ALL_INTERFACES_BROADCAST_ADDRESS = "255.255.255.255";
 
 	public static NetworkInterface getNetworkInterfaceByAddress(String addressString)
@@ -18,8 +18,8 @@ public class Networking {
 	}
 
 	public static Set<String> getBroadcastAddresses(NetworkInterface networkInterface) {
-
 		Validator.validate(networkInterface, "networkInterface");
+
 		Set<String> broadcastAddresses = new LinkedHashSet<>();
 		for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
 			if (interfaceAddress.getBroadcast() != null) {
@@ -58,6 +58,5 @@ public class Networking {
 		Validator.validate(packet, "packet");
 		return new String(packet.getData(), StandardCharsets.UTF_8).trim();
 	}
-
 
 }

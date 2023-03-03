@@ -12,13 +12,10 @@ public final class Messages {
     public static final int MAX_ATTEMPTS            = 3;
 
     public static boolean checkMessage(@NotNull String message) {
-
-        if (message.equals(HELLO) || message.equals(NONE))
+        if (message.equals(HELLO) || message.equals(NONE)) {
             return true;
-
+        }
         return false;
-
     }
-
 
 }

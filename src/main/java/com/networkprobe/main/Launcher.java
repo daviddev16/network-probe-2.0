@@ -64,6 +64,9 @@ public class Launcher {
                     break;
             }
 
+            /* experimental */
+            Monitor.DEBUG.set(true);
+
         } catch (Exception e) {
             LOGGER.error("Error while starting NetworkProbe.", e);
             System.exit(0);

@@ -34,16 +34,30 @@ public abstract class Worker implements Runnable {
     }
 
     public synchronized void start() {
+
+        if (getActiveState())
+            return;
+
         worker = new Thread(this, name);
         worker.setDaemon(daemon);
         worker.start();
     }
 
     public synchronized void stop() {
+
+        if (!getActiveState())
+            return;
+
         state.set(false);
 
         if (!state.get())
             worker.interrupt();
+
+        worker = null;
+    }
+
+    public boolean getActiveState() {
+        return state.get();
     }
 
     protected abstract void onBegin();

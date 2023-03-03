@@ -9,6 +9,8 @@ public class NetworkClient extends Worker {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(NetworkClient.class);
 
+    private final NetworkProbeFinder finder = new NetworkProbeFinder();
+
     public NetworkClient() {
         super("network-client", true, false);
     }
@@ -16,13 +18,16 @@ public class NetworkClient extends Worker {
     @Override
     public void onBegin() {
         try {
-            NetworkProbeFinder finder = new NetworkProbeFinder();
+
+            LOGGER.info("Starting finder...");
             finder.start();
+
             synchronized (NetworkProbeFinder.LOCK) {
-                LOGGER.info("Waiting for the finder response...");
                 NetworkProbeFinder.LOCK.wait();
-                System.out.println("Response GET: " + finder.getResponse());
             }
+
+            String serverAddress = finder.getResponse();
+            LOGGER.info("Network-probe server service is hosted in \"{}\" address.", serverAddress);
 
         } catch (Exception e) {
             Exceptions.unexpected(e, 1);
@@ -30,13 +35,9 @@ public class NetworkClient extends Worker {
     }
 
     @Override
-    protected void onUpdate() {
-
-    }
+    protected void onUpdate() {}
 
     @Override
-    protected void onStop() {
-
-    }
+    protected void onStop() {}
 
 }
